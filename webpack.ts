@@ -28,7 +28,6 @@ const config = {
         use: {
           loader: "babel-loader",
           options: {
-            plugins: [require.resolve("react-refresh/babel")],
             presets: [
               "@babel/preset-env",
               "@babel/preset-react",
@@ -36,10 +35,6 @@ const config = {
             ],
           },
         },
-      },
-      {
-        test: /\.(css)$/,
-        use: ["style-loader", "css-loader"],
       },
       { test: /\.(jpe?g|png|gif|ico|svg)$/i, use: "file?name=[name].[ext]" },
     ],
