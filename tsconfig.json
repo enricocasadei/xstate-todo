@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "types": ["react", "jest"],
+    "types": ["react", "jest", "node"],
     "jsx": "react",
     "target": "ES2019",
     "lib": ["dom", "ES2020"],
-    "sourceMap": true,  
+    "sourceMap": true,
     "strict": true,
     "moduleResolution": "Node",
     "importHelpers": true,
