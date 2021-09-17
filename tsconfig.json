@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "types": ["react", "jest"],
+    "jsx": "react",
+    "target": "ES2019",
+    "lib": ["dom", "ES2020"],
+    "sourceMap": true,  
+    "strict": true,
+    "moduleResolution": "Node",
+    "importHelpers": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build", "**/*.spec.ts"]
+}
