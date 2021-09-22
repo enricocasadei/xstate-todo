@@ -1,4 +1,4 @@
-import { assign, createMachine } from "xstate";
+import { AnyEventObject, assign, createMachine, Interpreter } from "xstate";
 import { QueryClient } from "react-query";
 import { uuid } from "uuidv4";
 
@@ -42,8 +42,7 @@ const addTodo = (context: any, event: any): Promise<Todo> => {
   });
 };
 
-export type TodoMachineType = typeof todoMachine;
-type MachineContext = { todos: Todos; todoItem?: Todo };
+export type MachineContext = { todos: Todos; todoItem?: Todo };
 export const todoMachine = createMachine<MachineContext>(
   {
     id: "todoMachine",
@@ -129,6 +128,7 @@ export const todoMachine = createMachine<MachineContext>(
 
       deleteTodoFromQueryCache: (context: any, event: any) => {
         const todos = queryClient.getQueryData<Todos>("todos");
+        console.log(todos);
         if (todos) {
           delete todos[event.data.id];
         }
