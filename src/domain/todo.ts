@@ -1,10 +1,18 @@
 import { assign, createMachine } from "xstate";
-import { QueryCache } from "react-query";
+import { QueryClient } from "react-query";
 import { uuid } from "uuidv4";
 
-export const queryCache = new QueryCache();
+export const queryClient = new QueryClient();
 
-const updateTodoDoneInApi = (context: any, event: any) => {
+export type Todo = {
+  id: string;
+  title: string;
+  done: boolean;
+};
+
+export type Todos = Record<string, Todo>;
+
+const updateTodoDoneInApi = (context: any, event: any): Promise<Todo> => {
   return new Promise((resolve) => {
     console.log("changing todo status in API");
     setTimeout(
@@ -14,14 +22,17 @@ const updateTodoDoneInApi = (context: any, event: any) => {
   });
 };
 
-const deleteTodo = (context: any, event: any) => {
+const deleteTodo = (
+  context: any,
+  event: any
+): Promise<{ success: boolean; id: string }> => {
   return new Promise((resolve) => {
     console.log("deleting todo from API");
     setTimeout(() => resolve({ success: true, id: event.todoItem.id }), 500);
   });
 };
 
-const addTodo = (context: any, event: any) => {
+const addTodo = (context: any, event: any): Promise<Todo> => {
   return new Promise((resolve) => {
     console.log("creating todo in API");
     setTimeout(
@@ -31,7 +42,9 @@ const addTodo = (context: any, event: any) => {
   });
 };
 
-export const todoMachine = createMachine(
+export type TodoMachineType = typeof todoMachine;
+type MachineContext = { todos: Todos; todoItem?: Todo };
+export const todoMachine = createMachine<MachineContext>(
   {
     id: "todoMachine",
     initial: "initialising",
@@ -95,7 +108,7 @@ export const todoMachine = createMachine(
     actions: {
       updateData: assign({
         todos: (_, event: any) => {
-          console.log("storing data from react-query in state machine");
+          console.log("storing data from react-query in state machine", event);
           return event.data;
         },
       }),
@@ -106,27 +119,29 @@ export const todoMachine = createMachine(
        */
       updateTodoInQueryCache: (context: any, event: any) => {
         // get current query data
-        const todos = queryCache.get("todos");
+        const todos = queryClient.getQueryData<Todos>("todos");
+        if (todos) {
+          todos[event.data.id] = event.data;
+        }
 
-        todos[event.data.id] = event.data;
-
-        queryCache.setQueryData("todos", todos);
+        queryClient.setQueryData("todos", todos);
       },
 
       deleteTodoFromQueryCache: (context: any, event: any) => {
-        const todos = queryCache.get("todos");
-
-        delete todos[event.data.id];
-
-        queryCache.setQueryData("todos", todos);
+        const todos = queryClient.getQueryData<Todos>("todos");
+        if (todos) {
+          delete todos[event.data.id];
+        }
+        queryClient.setQueryData("todos", todos);
       },
       addTodoInQueryCache: (context: any, event: any) => {
         console.log("adding todo in query cache");
-        const todos = queryCache.get("todos");
+        const todos = queryClient.getQueryData<Todos>("todos");
 
-        todos[event.data.id] = event.data;
-
-        queryCache.setQueryData("todos", todos);
+        if (todos) {
+          todos[event.data.id] = event.data;
+        }
+        queryClient.setQueryData("todos", todos);
       },
     },
   }

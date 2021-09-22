@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Counter } from "../View/Counter";
 import { Temperature } from "../View/Temperature";
 import { Payment } from "../View/Payment";
+import { Todos } from "../View/Todos";
 
 export function AppRouter() {
   return (
@@ -25,6 +26,9 @@ export function AppRouter() {
           <li>
             <Link to="/payment">Payment</Link>
           </li>
+          <li>
+            <Link to="/todos">Todos</Link>
+          </li>
         </ul>
 
         <hr />
@@ -38,6 +42,9 @@ export function AppRouter() {
           </Route>
           <Route path="/payment">
             <Payment />
+          </Route>
+          <Route path="/todos">
+            <Todos />
           </Route>
         </Switch>
       </div>
